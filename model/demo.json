@@ -1,0 +1,849 @@
+[
+  {
+    "name": "Knight",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Archers",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Goblins",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Giant",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "P.E.K.K.A",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Minions",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Balloon",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Witch",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Barbarians",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Golem",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Skeletons",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Valkyrie",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Skeleton Army",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Bomber",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Musketeer",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Baby Dragon",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Prince",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Wizard",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Mini P.E.K.K.A",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Spear Goblins",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Giant Skeleton",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Hog Rider",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Minion Horde",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Ice Wizard",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Royal Giant",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Guards",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Princess",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Dark Prince",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Three Musketeers",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Lava Hound",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ice Spirit",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Fire Spirit",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Miner",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Sparky",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Bowler",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Lumberjack",
+    "level": 6,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Battle Ram",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Inferno Dragon",
+    "level": 6,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ice Golem",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Mega Minion",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Dart Goblin",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblin Gang",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Electro Wizard",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Elite Barbarians",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Hunter",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Executioner",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Bandit",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Royal Recruits",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Night Witch",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Bats",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Royal Ghost",
+    "level": 6,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Ram Rider",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Zappies",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Rascals",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Cannon Cart",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Mega Knight",
+    "level": 6,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Skeleton Barrel",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Flying Machine",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Wall Breakers",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Royal Hogs",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblin Giant",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Fisherman",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Magic Archer",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Electro Dragon",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Firecracker",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Mighty Miner",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Elixir Golem",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Battle Healer",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Skeleton King",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Archer Queen",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Golden Knight",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Monk",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Skeleton Dragons",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Mother Witch",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Electro Spirit",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Electro Giant",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Phoenix",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Little Prince",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Goblin Demolisher",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblin Machine",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Suspicious Bush",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblinstein",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Rune Giant",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Berserker",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Boss Bandit",
+    "level": 4,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "champion"
+  },
+  {
+    "name": "Cannon",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Goblin Hut",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Mortar",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Inferno Tower",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Bomb Tower",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Barbarian Hut",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Tesla",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Elixir Collector",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "X-Bow",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Tombstone",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Furnace",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblin Cage",
+    "level": 12,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblin Drill",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Fireball",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Arrows",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Rage",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Rocket",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Goblin Barrel",
+    "level": 9,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "epic"
+  },
+  {
+    "name": "Freeze",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Mirror",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Lightning",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Zap",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Poison",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Graveyard",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "The Log",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Tornado",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Clone",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Earthquake",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Barbarian Barrel",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Heal Spirit",
+    "level": 12,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "rare"
+  },
+  {
+    "name": "Giant Snowball",
+    "level": 14,
+    "isEvolution": true,
+    "evolutionLevel": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Royal Delivery",
+    "level": 14,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "common"
+  },
+  {
+    "name": "Void",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Goblin Curse",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  },
+  {
+    "name": "Spirit Empress",
+    "level": 6,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Vines",
+    "level": 9,
+    "isEvolution": false,
+    "evolutionLevel": null,
+    "rarity": "epic"
+  }
+]
