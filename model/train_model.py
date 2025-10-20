@@ -55,6 +55,14 @@ print(f"\n✅ Cleaned data: {len(df_clean)} cards with valid elixir cost")
 le = LabelEncoder()
 df_clean["type_encoded"] = le.fit_transform(df_clean["type"])
 
+# Add binary features for area damage and spawned units
+df_clean["has_area_damage"] = df_clean["areaDamage"].apply(
+    lambda x: 0 if pd.isna(x) or x in ["N/A", "", None] else 1
+)
+df_clean["has_spawned_unit"] = df_clean["spawnedUnit"].apply(
+    lambda x: 0 if pd.isna(x) or x in ["N/A", "", None] else 1
+)
+
 # Features for training
 feature_cols = [
     "type_encoded",
@@ -64,6 +72,8 @@ feature_cols = [
     "dps_clean",
     "range_clean",
     "count_clean",
+    "has_area_damage",
+    "has_spawned_unit",
 ]
 
 # Fill NaN with median for each column
