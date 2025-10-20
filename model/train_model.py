@@ -1,0 +1,123 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+import pickle
+import re
+
+# Load the CSV
+df = pd.read_csv("cards.csv")
+
+print(f"📊 Loaded {len(df)} cards")
+print(f"Columns: {df.columns.tolist()}")
+
+
+# Clean elixir column - extract just the number
+def extract_elixir(val):
+    if pd.isna(val) or val == "N/A":
+        return None
+    # Extract first number from strings like "5 (1)" or "6/3"
+    match = re.search(r"(\d+)", str(val))
+    return float(match.group(1)) if match else None
+
+
+df["elixir_clean"] = df["elixir"].apply(extract_elixir)
+
+
+# Clean numeric columns - remove commas and extract numbers
+def clean_numeric(val):
+    if pd.isna(val) or val == "N/A" or val == "":
+        return None
+    # Remove commas and extract first number
+    val_str = str(val).replace(",", "")
+    match = re.search(r"(\d+\.?\d*)", val_str)
+    return float(match.group(1)) if match else None
+
+
+numeric_cols = ["hitpoints", "damage", "hitSpeed", "dps", "range", "count"]
+for col in numeric_cols:
+    if col in df.columns:
+        df[f"{col}_clean"] = df[col].apply(clean_numeric)
+
+# Drop rows with no elixir cost
+df_clean = df[df["elixir_clean"].notna()].copy()
+
+print(f"\n✅ Cleaned data: {len(df_clean)} cards with valid elixir cost")
+
+# Encode card type
+le = LabelEncoder()
+df_clean["type_encoded"] = le.fit_transform(df_clean["type"])
+
+# Features for training
+feature_cols = [
+    "type_encoded",
+    "hitpoints_clean",
+    "damage_clean",
+    "hitSpeed_clean",
+    "dps_clean",
+    "range_clean",
+    "count_clean",
+]
+
+# Fill NaN with median for each column
+X = df_clean[feature_cols].copy()
+for col in X.columns:
+    X[col].fillna(X[col].median(), inplace=True)
+
+y = df_clean["elixir_clean"]
+
+print(f"\n🎯 Training features: {feature_cols}")
+print(f"Target: elixir cost (range: {y.min():.0f}-{y.max():.0f})")
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+print("\n🤖 Training Random Forest model...")
+model = RandomForestRegressor(n_estimators=100, random_state=42, max_depth=10)
+model.fit(X_train, y_train)
+
+# Evaluate
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f"✅ Model trained!")
+print(f"   Train R² score: {train_score:.3f}")
+print(f"   Test R² score: {test_score:.3f}")
+
+# Feature importance
+importance = pd.DataFrame(
+    {"feature": feature_cols, "importance": model.feature_importances_}
+).sort_values("importance", ascending=False)
+
+print(f"\n📊 Feature Importance:")
+for _, row in importance.iterrows():
+    print(f"   {row['feature']}: {row['importance']:.3f}")
+
+# Save model and encoder
+with open("elixir_model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+with open("type_encoder.pkl", "wb") as f:
+    pickle.dump(le, f)
+
+# Save feature medians for filling NaN during prediction
+medians = {col: X[col].median() for col in feature_cols}
+with open("feature_medians.pkl", "wb") as f:
+    pickle.dump(medians, f)
+
+print("\n💾 Model saved as 'elixir_model.pkl'")
+print("💾 Encoder saved as 'type_encoder.pkl'")
+print("💾 Medians saved as 'feature_medians.pkl'")
+
+# Test predictions on a few examples
+print("\n🧪 Sample predictions:")
+for i in range(min(5, len(X_test))):
+    actual = y_test.iloc[i]
+    pred = model.predict([X_test.iloc[i]])[0]
+    print(
+        f"   Actual: {actual:.1f} | Predicted: {pred:.1f} | Diff: {abs(actual-pred):.2f}"
+    )
