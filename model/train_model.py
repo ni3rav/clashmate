@@ -29,10 +29,16 @@ df["elixir_clean"] = df["elixir"].apply(extract_elixir)
 def clean_numeric(val):
     if pd.isna(val) or val == "N/A" or val == "":
         return None
-    # Remove commas and extract first number
+    # Remove commas
     val_str = str(val).replace(",", "")
-    match = re.search(r"(\d+\.?\d*)", val_str)
-    return float(match.group(1)) if match else None
+    # Extract all numbers (handles '202/133', '84 (x10)', '1440 (1,200+240)', '35-422', etc.)
+    numbers = re.findall(r"\d+\.?\d*", val_str)
+    if not numbers:
+        return None
+    # Convert all to float
+    floats = [float(n) for n in numbers]
+    # Use mean if multiple values, else single value
+    return np.mean(floats) if len(floats) > 1 else floats[0]
 
 
 numeric_cols = ["hitpoints", "damage", "hitSpeed", "dps", "range", "count"]
