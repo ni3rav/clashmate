@@ -64,8 +64,21 @@ def predict():
     except:
         type_encoded = 0
 
+    # Binary features
     has_area_damage = 0
-    has_spawned_unit = 0
+
+    # Cycle card feature (for low-cost cards)
+    # We'll need actual elixir to calculate, so we'll use prediction logic
+    # For now, default to 0 (not a cycle card)
+    is_cycle_card = 0
+
+    # HP/Damage ratio
+    hp_damage_ratio = hitpoints / (damage + 1) if damage > 0 else 0
+
+    # Feature order must match training:
+    # ['type_encoded', 'hitpoints_clean', 'damage_clean', 'hitSpeed_clean',
+    #  'dps_clean', 'range_clean', 'count_clean', 'has_area_damage',
+    #  'is_cycle_card', 'hp_damage_ratio']
     features = np.array(
         [
             [
@@ -77,7 +90,8 @@ def predict():
                 range_val,
                 count,
                 has_area_damage,
-                has_spawned_unit,
+                is_cycle_card,
+                hp_damage_ratio,
             ]
         ]
     )

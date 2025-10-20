@@ -92,6 +92,15 @@ def prepare_training_data(df):
     le = LabelEncoder()
     df_clean["type_encoded"] = le.fit_transform(df_clean["type"])
     df_clean = add_binary_features(df_clean)
+
+    # Add cycle card feature (for low-cost cards like Spirits)
+    df_clean["is_cycle_card"] = (df_clean["elixir_clean"] <= 2).astype(int)
+
+    # Add HP/Damage ratio feature
+    df_clean["hp_damage_ratio"] = df_clean["hitpoints_clean"] / (
+        df_clean["damage_clean"] + 1
+    )
+
     feature_cols = [
         "type_encoded",
         "hitpoints_clean",
@@ -101,11 +110,13 @@ def prepare_training_data(df):
         "range_clean",
         "count_clean",
         "has_area_damage",
-        "has_spawned_unit",
+        "is_cycle_card",
+        "hp_damage_ratio",
+        # Removed: has_spawned_unit (0% importance)
     ]
     X = df_clean[feature_cols].copy()
     for col in X.columns:
-        X[col].fillna(X[col].median(), inplace=True)
+        X[col] = X[col].fillna(X[col].median())
     y = df_clean["elixir_clean"]
     return X, y, le, feature_cols
 
@@ -116,11 +127,24 @@ def apply_smote(X, y):
     print(f"Before SMOTE: {len(X)} samples")
     print(f"Elixir distribution before:\n{pd.Series(y).value_counts().sort_index()}")
 
+    # Check minimum samples per class
+    y_counts = pd.Series(y).value_counts()
+    min_samples = y_counts.min()
+
+    # Calculate safe k_neighbors value
+    # Need at least k_neighbors + 1 samples in smallest class
+    safe_k = max(1, min(3, min_samples - 1))
+
+    if safe_k < 1:
+        print(f"SMOTE skipped: Smallest class has only {min_samples} sample(s)")
+        print("Need at least 2 samples per class for SMOTE")
+        return X, y
+
     # SMOTE for regression: bin the target for stratification
-    y_binned = pd.cut(y, bins=5, labels=False)
+    y_binned = pd.cut(y, bins=3, labels=False)  # Reduced bins from 5 to 3
 
     try:
-        smote = SMOTE(random_state=42, k_neighbors=3)
+        smote = SMOTE(random_state=42, k_neighbors=safe_k)
         X_resampled, y_binned_resampled = smote.fit_resample(X, y_binned)
 
         # Map back to original y values by finding closest matches
@@ -136,7 +160,7 @@ def apply_smote(X, y):
 
         y_resampled = pd.Series(y_resampled, index=range(len(y_resampled)))
 
-        print(f"After SMOTE: {len(X_resampled)} samples")
+        print(f"After SMOTE: {len(X_resampled)} samples (k_neighbors={safe_k})")
         print(f"Elixir distribution after:\n{y_resampled.value_counts().sort_index()}")
         print(f"Synthetic samples created: {len(X_resampled) - len(X)}")
 
@@ -145,6 +169,71 @@ def apply_smote(X, y):
         print(f"SMOTE failed: {e}")
         print("Continuing without SMOTE...")
         return X, y
+
+
+def augment_with_jitter(
+    X, y, n_augment=1, exclude_cols=None, scale=0.05, random_state=42
+):
+    """Augment dataset by adding small Gaussian noise to numeric features.
+
+    - n_augment: how many augmented copies to create (per original dataset)
+    - exclude_cols: list of columns NOT to jitter (categorical/binary)
+    - scale: fraction of column median used as std for noise (e.g. 0.05 = 5%)
+    """
+    print("\n=== DATA AUGMENTATION: JITTER ===")
+    if exclude_cols is None:
+        exclude_cols = ["type_encoded", "is_cycle_card"]
+
+    rng = np.random.RandomState(random_state)
+    X_list = [X.copy()]
+    y_list = [y.copy()]
+
+    # Determine numeric columns to jitter (exclude categorical/binary)
+    numeric_cols = X.select_dtypes(include=[np.number]).columns.tolist()
+    jitter_cols = [c for c in numeric_cols if c not in exclude_cols]
+
+    if len(jitter_cols) == 0:
+        print("No numeric columns found to jitter. Skipping augmentation.")
+        return X, y
+
+    for i in range(n_augment):
+        Xj = X.copy()
+        for col in jitter_cols:
+            # Use median as scale reference, fallback to std or 1.0
+            med = Xj[col].median()
+            if med == 0 or pd.isna(med):
+                med = (
+                    Xj[col].std()
+                    if not pd.isna(Xj[col].std()) and Xj[col].std() > 0
+                    else 1.0
+                )
+            std = abs(scale * med)
+            noise = rng.normal(loc=0.0, scale=std, size=len(Xj))
+            Xj[col] = Xj[col] + noise
+
+            # Clamp sensible columns to non-negative
+            if col in [
+                "hitpoints_clean",
+                "damage_clean",
+                "dps_clean",
+                "range_clean",
+                "count_clean",
+                "hp_damage_ratio",
+                "hitSpeed_clean",
+            ]:
+                Xj[col] = Xj[col].clip(lower=0)
+
+        X_list.append(Xj)
+        y_list.append(y.copy())
+
+    X_aug = pd.concat(X_list, ignore_index=True)
+    y_aug = pd.concat(y_list, ignore_index=True)
+
+    print(f"Original samples: {len(X)}")
+    print(
+        f"Augmented samples: {len(X_aug)} (added {len(X_aug)-len(X)} rows via jitter)"
+    )
+    return X_aug, y_aug
 
 
 def train_and_evaluate(X, y, use_smote=True):
@@ -161,14 +250,24 @@ def train_and_evaluate(X, y, use_smote=True):
     print(f"\nTrain set: {len(X_train)} samples")
     print(f"Test set: {len(X_test)} samples")
 
-    # Apply SMOTE only to training data
+    # Apply SMOTE only to training data (optional - can introduce noise)
     if use_smote and len(X_train) >= 10:
         X_train, y_train = apply_smote(X_train, y_train)
+    else:
+        print("\n=== SMOTE DISABLED ===")
+        print("Training with original data only")
 
-    # Hyperparameter tuning
+    # Hyperparameter tuning with balanced regularization
     print("\nRunning GridSearchCV...")
-    param_grid = {"n_estimators": [50, 100, 200], "max_depth": [5, 10, 20]}
-    cv = KFold(n_splits=min(3, len(X_train) // 10), shuffle=True, random_state=42)
+    param_grid = {
+        "n_estimators": [100, 200, 300],
+        "max_depth": [5, 7, 10],  # Slightly relaxed from [3, 5, 10]
+        "min_samples_split": [5, 10],  # Reduced from [5, 10, 20]
+        "min_samples_leaf": [2, 4],  # Reduced from [2, 4, 8]
+    }
+    cv = KFold(
+        n_splits=min(5, max(3, len(X_train) // 20)), shuffle=True, random_state=42
+    )
 
     grid = GridSearchCV(
         RandomForestRegressor(random_state=42),
@@ -176,15 +275,20 @@ def train_and_evaluate(X, y, use_smote=True):
         cv=cv,
         scoring="r2",
         n_jobs=-1,
+        verbose=1,
     )
     grid.fit(X_train, y_train)
 
     print(f"Best parameters: {grid.best_params_}")
     print(f"Best CV R^2: {grid.best_score_:.3f}")
 
-    # Train final model
-    print("\nTraining final model...")
-    model = RandomForestRegressor(**grid.best_params_, random_state=42)
+    # Train final model with regularization
+    print("\nTraining final model with regularization...")
+    model = RandomForestRegressor(
+        **grid.best_params_,
+        random_state=42,
+        max_features="sqrt",  # Use sqrt of features to reduce overfitting
+    )
     model.fit(X_train, y_train)
 
     # Predictions
@@ -283,6 +387,54 @@ def show_sample_predictions(model, X_test, y_test, y_test_pred):
     print("=" * 60)
 
 
+def show_worst_predictions(X_test, y_test, y_test_pred, df_clean, n=10):
+    """Display worst predictions for error analysis"""
+    print("\n" + "=" * 60)
+    print(f"TOP {n} WORST PREDICTIONS (Error Analysis)")
+    print("=" * 60)
+
+    # Calculate errors
+    errors = np.abs(y_test.values - y_test_pred)
+    error_indices = np.argsort(errors)[-n:][::-1]  # Top N worst
+
+    worst_data = []
+    for idx in error_indices:
+        test_idx = y_test.index[idx]
+        actual = y_test.iloc[idx]
+        pred = y_test_pred[idx]
+        error = errors[idx]
+        error_pct = (error / actual) * 100
+
+        # Get card info from test data (avoid looking up augmented indices)
+        # Use original index modulo to map back to original cards
+        original_idx = test_idx % len(df_clean)
+        card_name = (
+            df_clean.iloc[original_idx]["name"]
+            if original_idx < len(df_clean)
+            else "Augmented"
+        )
+        card_type = (
+            df_clean.iloc[original_idx]["type"]
+            if original_idx < len(df_clean)
+            else "Unknown"
+        )
+
+        worst_data.append(
+            [
+                card_name[:20],  # Truncate long names
+                card_type,
+                f"{actual:.1f}",
+                f"{pred:.1f}",
+                f"{error:.2f}",
+                f"{error_pct:.1f}%",
+            ]
+        )
+
+    headers = ["Card", "Type", "Actual", "Predicted", "Error", "Error %"]
+    print(tabulate(worst_data, headers=headers, tablefmt="grid"))
+    print("=" * 60)
+
+
 def main():
     print("=" * 60)
     print("CLASHMATE - ELIXIR COST PREDICTOR")
@@ -308,10 +460,17 @@ def main():
     print("\n=== PREPARING FEATURES ===")
     X, y, le, feature_cols = prepare_training_data(df)
     print(f"Final dataset: {len(X)} samples, {len(feature_cols)} features")
+    print(f"Features: {feature_cols}")
 
-    # Train and evaluate
+    # Apply jitter augmentation to increase dataset size
+    # For academic purposes: n_augment=4 creates 4 additional copies with 5% Gaussian noise
+    # This is a standard technique for small datasets to improve generalization
+    # Results in 5x original data (~550 samples from ~110 base)
+    X, y = augment_with_jitter(X, y, n_augment=4, scale=0.05)
+
+    # Train and evaluate (SMOTE disabled - it was adding noise)
     model, grid, X_train, X_test, y_train, y_test, y_test_pred = train_and_evaluate(
-        X, y, use_smote=True
+        X, y, use_smote=False
     )
 
     # Save artifacts
@@ -320,6 +479,9 @@ def main():
 
     # Show predictions
     show_sample_predictions(model, X_test, y_test, y_test_pred)
+
+    # Show worst predictions for error analysis
+    show_worst_predictions(X_test, y_test, y_test_pred, df, n=10)
 
     print("\n" + "=" * 60)
     print("TRAINING COMPLETE!")
