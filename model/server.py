@@ -16,9 +16,9 @@ try:
         type_encoder = pickle.load(f)
     with open("feature_medians.pkl", "rb") as f:
         feature_medians = pickle.load(f)
-    print("✅ Model loaded successfully!")
+    print("Model loaded successfully!")
 except FileNotFoundError:
-    print("⚠️ Model files not found. Please run train_model.py first!")
+    print("Model files not found. Please run train_model.py first!")
     model = None
 
 # Load card data for comparison
@@ -64,9 +64,22 @@ def predict():
     except:
         type_encoded = 0
 
-    # Create feature array
+    has_area_damage = 0
+    has_spawned_unit = 0
     features = np.array(
-        [[type_encoded, hitpoints, damage, hit_speed, dps, range_val, count]]
+        [
+            [
+                type_encoded,
+                hitpoints,
+                damage,
+                hit_speed,
+                dps,
+                range_val,
+                count,
+                has_area_damage,
+                has_spawned_unit,
+            ]
+        ]
     )
 
     # Predict
@@ -117,12 +130,12 @@ def health():
 
 
 if __name__ == "__main__":
-    print("\n🚀 Starting Elixir Cost Predictor Server...")
-    print("📍 Server running at http://localhost:5000")
-    print("\n📝 Endpoints:")
+    print("\nStarting ClashMate Server...")
+    print("Server running at http://localhost:5000")
+    print("\nEndpoints:")
     print("   GET  /        - Web interface")
     print("   POST /predict - Predict elixir cost")
     print("   GET  /cards   - Get all cards data")
     print("   GET  /health  - Health check")
-    print("\n")
+    print()
     app.run(debug=True, host="0.0.0.0", port=5000)
