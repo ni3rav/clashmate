@@ -52,7 +52,30 @@
 
                     <div class="form-group">
                         <label for="range">Range</label>
-                        <input type="number" id="range" placeholder="5.5" min="0" step="0.1">
+                        <select id="range">
+                            <option value="">-- Select Range --</option>
+                            <optgroup label="Melee">
+                                <option value="0.5">Melee: Short (0.5)</option>
+                                <option value="0.7">Melee: Short (0.7)</option>
+                                <option value="0.8">Melee: Short (0.8)</option>
+                                <option value="1.2">Melee: Medium (1.2)</option>
+                                <option value="1.6">Melee: Long (1.6)</option>
+                            </optgroup>
+                            <optgroup label="Ranged">
+                                <option value="2.5">Short Range (2.5)</option>
+                                <option value="3.5">Medium Range (3.5)</option>
+                                <option value="4.5">Medium Range (4.5)</option>
+                                <option value="5">Long Range (5.0)</option>
+                                <option value="5.5">Long Range (5.5)</option>
+                                <option value="6">Long Range (6.0)</option>
+                                <option value="6.5">Very Long Range (6.5)</option>
+                                <option value="7">Very Long Range (7.0)</option>
+                                <option value="9">Very Long Range (9.0)</option>
+                            </optgroup>
+                            <option value="custom">Custom Value...</option>
+                        </select>
+                        <input type="number" id="rangeCustom" placeholder="Enter custom range" min="0" step="0.1"
+                            style="display:none; margin-top: 8px;">
                     </div>
 
                     <div class="form-group">
@@ -168,12 +191,39 @@
             document.getElementById('gaugeContainer').style.display = 'none';
             document.getElementById('count').value = 1;
             document.getElementById('dps').value = '';
+            document.getElementById('rangeCustom').style.display = 'none';
+            document.getElementById('rangeCustom').value = '';
 
             // Reset chart highlight
             if (distributionChart) {
                 distributionChart.data.datasets[0].backgroundColor = 'rgba(102, 126, 234, 0.6)';
                 distributionChart.update();
             }
+        }
+
+        // Handle range dropdown and custom input
+        function handleRangeChange() {
+            const rangeSelect = document.getElementById('range');
+            const rangeCustom = document.getElementById('rangeCustom');
+
+            if (rangeSelect.value === 'custom') {
+                rangeCustom.style.display = 'block';
+                rangeCustom.focus();
+            } else {
+                rangeCustom.style.display = 'none';
+                rangeCustom.value = '';
+            }
+        }
+
+        // Get the actual range value (from dropdown or custom input)
+        function getRangeValue() {
+            const rangeSelect = document.getElementById('range');
+            const rangeCustom = document.getElementById('rangeCustom');
+
+            if (rangeSelect.value === 'custom') {
+                return parseFloat(rangeCustom.value) || 0;
+            }
+            return parseFloat(rangeSelect.value) || 0;
         }
 
         // Add event listeners for validation and auto-calc
@@ -189,6 +239,7 @@
 
             document.getElementById('damage').addEventListener('input', calculateDPS);
             document.getElementById('hitSpeed').addEventListener('input', calculateDPS);
+            document.getElementById('range').addEventListener('change', handleRangeChange);
 
             // Add keyboard shortcuts
             document.addEventListener('keydown', function (e) {
@@ -327,7 +378,7 @@
                 damage: document.getElementById('damage').value,
                 hitSpeed: document.getElementById('hitSpeed').value,
                 dps: document.getElementById('dps').value,
-                range: document.getElementById('range').value,
+                range: getRangeValue(),
                 count: document.getElementById('count').value
             };
 
