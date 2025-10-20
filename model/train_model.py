@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.preprocessing import LabelEncoder
 import pickle
 import re
@@ -91,9 +92,22 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Train model
-print("\n🤖 Training Random Forest model...")
-model = RandomForestRegressor(n_estimators=100, random_state=42, max_depth=10)
+
+# Cross-validation and hyperparameter tuning
+print("\n🔍 Running GridSearchCV for Random Forest hyperparameters...")
+param_grid = {"n_estimators": [50, 100, 200], "max_depth": [5, 10, 20]}
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
+grid = GridSearchCV(
+    RandomForestRegressor(random_state=42), param_grid, cv=cv, scoring="r2", n_jobs=-1
+)
+grid.fit(X_train, y_train)
+
+print(f"Best parameters: {grid.best_params_}")
+print(f"Best cross-validated R²: {grid.best_score_:.3f}")
+
+# Train final model with best params
+print("\n🤖 Training final Random Forest model...")
+model = RandomForestRegressor(**grid.best_params_, random_state=42)
 model.fit(X_train, y_train)
 
 # Evaluate
