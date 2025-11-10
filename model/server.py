@@ -67,10 +67,25 @@ def predict():
     # Binary features
     has_area_damage = 0
 
-    # Cycle card feature (for low-cost cards)
-    # We'll need actual elixir to calculate, so we'll use prediction logic
-    # For now, default to 0 (not a cycle card)
-    is_cycle_card = 0
+    # Cycle card proxy (NON-LEAKY: computed from input features only)
+    # Uses the same logic as training: low HP, low damage, low DPS, small count
+    hp_median = feature_medians.get("proxy_hp_median", feature_medians.get("hitpoints_clean", 0))
+    damage_median = feature_medians.get("proxy_damage_median", feature_medians.get("damage_clean", 0))
+    dps_median = feature_medians.get("proxy_dps_median", feature_medians.get("dps_clean", 0))
+    
+    # Use provided values or fallback to medians
+    hp_val = hitpoints if hitpoints > 0 else hp_median
+    damage_val = damage if damage > 0 else damage_median
+    dps_val = dps if dps > 0 else dps_median
+    count_val = count if count > 0 else 1
+    
+    # Compute cycle card proxy using same logic as training
+    is_cycle_card = int(
+        (hp_val < hp_median) &
+        (damage_val < damage_median) &
+        (dps_val < dps_median) &
+        (count_val <= 2)
+    )
 
     # HP/Damage ratio
     hp_damage_ratio = hitpoints / (damage + 1) if damage > 0 else 0

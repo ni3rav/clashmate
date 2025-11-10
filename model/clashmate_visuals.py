@@ -90,7 +90,6 @@ print("Generating feature importance plot...")
 fig, ax = plt.subplots(figsize=(10, 7))
 
 features = [
-    'is_cycle_card',
     'hitpoints_clean',
     'hp_damage_ratio',
     'damage_clean',
@@ -99,9 +98,11 @@ features = [
     'dps_clean',
     'hitSpeed_clean',
     'has_area_damage',
-    'type_encoded'
+    'type_encoded',
+    'is_cycle_card'
 ]
-importance = [28.76, 22.11, 13.50, 8.67, 7.38, 6.07, 5.49, 4.40, 2.71, 0.89]
+# Updated importance values with non-leaky proxy (is_cycle_card dropped from 28.76% to 0.59%)
+importance = [30.70, 17.62, 12.74, 9.94, 8.25, 7.82, 6.31, 3.93, 2.12, 0.59]
 
 # Sort descending (already sorted, but ensure)
 data = list(zip(features, importance))
@@ -119,7 +120,7 @@ for bar, val in zip(bars, importance_sorted):
 
 ax.set_xlabel('Importance', color='black', fontsize=12)
 ax.set_ylabel('Feature', color='black', fontsize=12)
-ax.set_title('Feature Importance in Elixir Prediction', fontsize=14, color='black', fontweight='bold')
+ax.set_title('Feature Importance in Elixir Prediction (Non-Leaky Proxy)', fontsize=14, color='black', fontweight='bold')
 ax.grid(True, alpha=0.3, linestyle='--', axis='x')
 ax.set_axisbelow(True)
 
@@ -134,8 +135,9 @@ print("Generating train vs test metrics comparison plot...")
 fig, ax = plt.subplots(figsize=(10, 6))
 
 metrics = ['R²', 'RMSE', 'MAE', 'MAPE']
-train_values = [0.9407, 0.373, 0.2727, 7.44]
-test_values = [0.8971, 0.489, 0.3622, 9.34]
+# Updated metrics with non-leaky proxy (methodologically sound performance)
+train_values = [0.9358, 0.3879, 0.2878, 9.23]
+test_values = [0.8444, 0.6013, 0.4741, 15.24]
 
 x = np.arange(len(metrics))
 width = 0.35
@@ -153,7 +155,7 @@ for bars in [bars1, bars2]:
 
 ax.set_xlabel('Metric', color='black', fontsize=12)
 ax.set_ylabel('Value', color='black', fontsize=12)
-ax.set_title('Model Performance: Train vs Test', fontsize=14, color='black', fontweight='bold')
+ax.set_title('Model Performance: Train vs Test (Non-Leaky Proxy)', fontsize=14, color='black', fontweight='bold')
 ax.set_xticks(x)
 ax.set_xticklabels(metrics)
 ax.legend(loc='upper right', frameon=True, edgecolor='black')
@@ -172,19 +174,21 @@ print("METRICS SUMMARY TABLE")
 print("="*70 + "\n")
 
 table_data = [
-    ['R²', '0.9407', '0.8971', 'Excellent'],
-    ['RMSE', '0.373', '0.489', 'Very good'],
-    ['MAE', '0.2727', '0.3622', 'Good'],
-    ['MAPE', '7.44%', '9.34%', 'Excellent']
+    ['R²', '0.9358', '0.8444', 'Good (methodologically sound)'],
+    ['RMSE', '0.3879', '0.6013', 'Acceptable'],
+    ['MAE', '0.2878', '0.4741', 'Acceptable'],
+    ['MAPE', '9.23%', '15.24%', 'Acceptable']
 ]
 
 headers = ['Metric', 'Train', 'Test', 'Interpretation']
 print(tabulate(table_data, headers=headers, tablefmt='grid'))
 
 # Calculate and print R² gap
-r2_gap = 0.9407 - 0.8971
-r2_gap_percent = (r2_gap / 0.9407) * 100
+r2_gap = 0.9358 - 0.8444
+r2_gap_percent = (r2_gap / 0.9358) * 100
 print(f"\nTrain–Test R² gap: {r2_gap:.4f} ({r2_gap_percent:.2f}%)")
+print("\nNote: Metrics updated after fixing data leakage in is_cycle_card feature.")
+print("The drop in performance (R²: 0.8971 → 0.8444) validates the leak fix.")
 
 # ============================================================================
 # Completion Message

@@ -47,6 +47,37 @@ def add_binary_features(df):
     return df
 
 
+def compute_cycle_card_proxy(df):
+    """
+    Compute a non-leaky proxy for cycle cards based on input features only.
+    Cycle cards typically have low HP, low damage, low DPS, small count, and fast hit speed.
+    This feature can be computed at inference time without knowing the elixir cost.
+    """
+    # Fill missing values with median for threshold calculations
+    hp_median = df["hitpoints_clean"].median()
+    damage_median = df["damage_clean"].median()
+    dps_median = df["dps_clean"].median()
+    
+    # Cycle cards are characterized by:
+    # 1. Low HP (below median)
+    # 2. Low damage (below median) 
+    # 3. Low DPS (below median)
+    # 4. Small count (≤ 2, or missing/1)
+    # 5. Fast hit speed (low hitSpeed, but this is less reliable)
+    
+    count_filled = df["count_clean"].fillna(1)
+    
+    # Create proxy: card is likely a cycle card if it has low stats across multiple dimensions
+    is_cycle_proxy = (
+        (df["hitpoints_clean"].fillna(hp_median) < hp_median) &
+        (df["damage_clean"].fillna(damage_median) < damage_median) &
+        (df["dps_clean"].fillna(dps_median) < dps_median) &
+        (count_filled <= 2)
+    ).astype(int)
+    
+    return is_cycle_proxy
+
+
 def remove_duplicates(df):
     """Remove duplicate card entries, keeping the first occurrence"""
     print("\n=== DATA CLEANING: Remove Duplicates ===")
@@ -93,8 +124,9 @@ def prepare_training_data(df):
     df_clean["type_encoded"] = le.fit_transform(df_clean["type"])
     df_clean = add_binary_features(df_clean)
 
-    # Add cycle card feature (for low-cost cards like Spirits)
-    df_clean["is_cycle_card"] = (df_clean["elixir_clean"] <= 2).astype(int)
+    # Add cycle card proxy (NON-LEAKY: computed from input features only)
+    # This replaces the previous target-derived feature that caused data leakage
+    df_clean["is_cycle_card"] = compute_cycle_card_proxy(df_clean)
 
     # Add HP/Damage ratio feature
     df_clean["hp_damage_ratio"] = df_clean["hitpoints_clean"] / (
@@ -355,12 +387,15 @@ def display_feature_importance(model, feature_names):
     print("=" * 50)
 
 
-def save_artifacts(model, le, X, feature_cols):
+def save_artifacts(model, le, X, feature_cols, proxy_medians=None):
     with open("elixir_model.pkl", "wb") as f:
         pickle.dump(model, f)
     with open("type_encoder.pkl", "wb") as f:
         pickle.dump(le, f)
     medians = {col: X[col].median() for col in feature_cols}
+    # Also save medians used for cycle card proxy computation
+    if proxy_medians:
+        medians.update(proxy_medians)
     with open("feature_medians.pkl", "wb") as f:
         pickle.dump(medians, f)
     print("Model, encoder, and medians saved.")
@@ -462,6 +497,14 @@ def main():
     print(f"Final dataset: {len(X)} samples, {len(feature_cols)} features")
     print(f"Features: {feature_cols}")
 
+    # Compute and save medians for cycle card proxy (needed for inference)
+    # These medians are computed from the original (non-augmented) data
+    proxy_medians = {
+        "proxy_hp_median": X["hitpoints_clean"].median(),
+        "proxy_damage_median": X["damage_clean"].median(),
+        "proxy_dps_median": X["dps_clean"].median(),
+    }
+
     # Apply jitter augmentation to increase dataset size
     # For academic purposes: n_augment=4 creates 4 additional copies with 5% Gaussian noise
     # This is a standard technique for small datasets to improve generalization
@@ -475,7 +518,7 @@ def main():
 
     # Save artifacts
     print("\n=== SAVING MODEL ===")
-    save_artifacts(model, le, X, feature_cols)
+    save_artifacts(model, le, X, feature_cols, proxy_medians=proxy_medians)
 
     # Show predictions
     show_sample_predictions(model, X_test, y_test, y_test_pred)
